@@ -1,0 +1,31 @@
+version: '2.2'
+services:
+  postgresql:
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: blacklistd
+      POSTGRES_USER: blacklistd
+      POSTGRES_PASSWORD: blacklistd
+  mariadb:
+    image: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: blacklistd
+      MYSQL_DATABASE: blacklistd
+      MYSQL_USER: blacklistd
+      MYSQL_PASSWORD: blacklistd
+  mysql:
+    image: mysql
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: blacklistd
+      MYSQL_DATABASE: blacklistd
+      MYSQL_USER: blacklistd
+      MYSQL_PASSWORD: blacklistd
