@@ -205,7 +205,7 @@ fn update_old_ips(
 
     let update_threshold = chrono::Utc::now()
         .checked_sub_signed(chrono::Duration::weeks(i64::from(
-            args.stale_days,
+            args.expiration_days,
         )))
         .expect("Unable to substract weeks")
         .naive_utc();
