@@ -152,10 +152,10 @@ fn delete_old_ips(
     db_type: DBType,
 ) {
     let removale_threshold = chrono::Utc::now()
-        .checked_sub_signed(chrono::Duration::weeks(i64::from(
+        .checked_sub_signed(chrono::Duration::days(i64::from(
             args.stale_days,
         )))
-        .expect("Unable to substract weeks")
+        .expect("Unable to substract days")
         .naive_utc();
 
     let deleted = db_op!(db_conn, db_type, conn {

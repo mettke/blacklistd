@@ -204,10 +204,10 @@ fn update_old_ips(
     let mut delete_error = 0;
 
     let update_threshold = chrono::Utc::now()
-        .checked_sub_signed(chrono::Duration::weeks(i64::from(
+        .checked_sub_signed(chrono::Duration::days(i64::from(
             args.expiration_days,
         )))
-        .expect("Unable to substract weeks")
+        .expect("Unable to substract days")
         .naive_utc();
     let filter = blacklist
         .filter(
