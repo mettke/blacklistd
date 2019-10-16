@@ -223,7 +223,11 @@ fn update_old_ips(
             || filter.load::<Blacklist>(conn),
             |entry| {
                 updated += 1;
-                diesel::update(blacklist).set(entry).execute(conn)
+                diesel::update(blacklist)
+                    .set(entry)
+                    .filter(ip.eq(&entry.ip)
+                            .and(ip_type.eq(entry.ip_type)))
+                    .execute(conn)
             },
             |entry| {
                 deleted += 1;
