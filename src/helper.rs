@@ -3,6 +3,7 @@ use iron::{
     headers::Allow, method::Method, status, IronResult, Response,
 };
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
+use time::OffsetDateTime;
 
 pub fn convert_ip(
     raw_ip: &[u8],
@@ -31,9 +32,9 @@ pub fn method_not_allowed(
     Ok(response)
 }
 
-pub fn get_elapsed_time(time: time::Tm) -> i64 {
-    let response_time = time::now() - time;
-    response_time.num_seconds()
+pub fn get_elapsed_time(time: OffsetDateTime) -> i64 {
+    let response_time = OffsetDateTime::now() - time;
+    response_time.whole_seconds()
 }
 
 #[macro_export]

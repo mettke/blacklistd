@@ -12,15 +12,16 @@ use diesel::{
 };
 use log::{debug, error, info, warn};
 use reqwest::{
+    blocking::Client,
     header::{HeaderName, ACCEPT},
-    Client,
 };
 use std::any::Any;
+use time::OffsetDateTime;
 
 macro_rules! abipdb_call {
     ($client:expr, $url:expr, $accept:expr, $key:expr) => {
         {
-            let mut response = $client
+            let response = $client
                 .get($url)
                 .header(ACCEPT, $accept)
                 .header(
@@ -71,7 +72,7 @@ pub fn update_abuseipdb(
     client: &Client,
 ) {
     info!("Fetching abuseipdb");
-    let time = time::now();
+    let time = OffsetDateTime::now();
     if let Some(response) =
         fetch_abuseipdb_blacklist(args, client)
     {

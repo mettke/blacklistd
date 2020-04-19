@@ -1,0 +1,27 @@
+API_KEY="cf1bfc9d54d4f7029a64078eb4effddf507a248f2205e757ed906e4f5dca98150076ed5ea1006484"
+DB_PATH="/tmp/blacklist.sqlite"
+
+# Start
+diesel migration run \
+    --migration-dir='migrations.sqlite' \
+    --database-url="${DB_PATH}"
+cargo run -- --api-abuseipdb "${API_KEY}" --port "8080" \
+    --db-type sqlite --db-path "${DB_PATH}"
+
+# Test
+curl http://localhost:8080/api/system_health
+curl http://localhost:8080/stats/count
+curl http://localhost:8080/stats/countPerDay
+
+# Container Test
+docker run --rm -it \
+    --name "blacklistd_test" \
+    --publish "8080:8080" \
+    -e "PORT=8080" \
+    -e "LOG_LEVEL=1" \
+    -e "API_ABUSEIPDB=${API_KEY}" \
+    blacklistd:test
+
+curl "http://$(docker inspect blacklistd_test | jq -r '.[].NetworkSettings.Networks.bridge.IPAddress'):8080/api/system_health"
+curl "http://$(docker inspect blacklistd_test | jq -r '.[].NetworkSettings.Networks.bridge.IPAddress'):8080/stats/count"
+curl "http://$(docker inspect blacklistd_test | jq -r '.[].NetworkSettings.Networks.bridge.IPAddress'):8080/stats/countPerDay"

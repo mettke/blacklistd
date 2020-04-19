@@ -16,7 +16,7 @@ use clokwerk::{ScheduleHandle, Scheduler, TimeUnits};
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use iron::{status, Chain, Iron, IronResult, Request, Response};
 use log::{debug, error, info, trace};
-use reqwest::Client;
+use reqwest::blocking::Client;
 use std::{any::Any, process::exit, time::Duration};
 
 fn request(req: &mut Request) -> IronResult<Response> {

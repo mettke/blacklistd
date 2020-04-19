@@ -5,6 +5,7 @@ use iron::{
     IronError, IronResult, Request, Response,
 };
 use log::{error, info, trace};
+use time::OffsetDateTime;
 
 pub struct Logger;
 
@@ -16,12 +17,12 @@ impl Logger {
 
 struct StartTime;
 impl Key for StartTime {
-    type Value = time::Tm;
+    type Value = OffsetDateTime;
 }
 
 impl Logger {
     fn initialise(&self, req: &mut Request) {
-        req.extensions.insert::<StartTime>(time::now());
+        req.extensions.insert::<StartTime>(OffsetDateTime::now());
     }
 
     fn log(
@@ -32,19 +33,14 @@ impl Logger {
         let entry_time =
             *req.extensions.get::<StartTime>().unwrap();
 
-        let response_time = time::now() - entry_time;
-        let response_time_ms = (response_time.num_seconds()
-            * 1000) as f64
-            + (response_time.num_nanoseconds().unwrap_or(0)
-                as f64)
-                / 1_000_000.0;
+        let response_time = OffsetDateTime::now() - entry_time;
+        let response_time_ms = response_time.whole_milliseconds();
         info!(
             "{} - {} [{}] \"{} {} {}\" {} {} \"{}\" \"{}\" ({} ms)",
             req.remote_addr.ip(),
             req.url.username().unwrap_or_else(|| "-"),
             entry_time
-                .strftime("%Y-%m-%dT%H:%M:%S.%fZ%z")
-                .unwrap(),
+                .format("%Y-%m-%dT%H:%M:%S.%NZ%z"),
             req.method,
             req.url,
             req.version,

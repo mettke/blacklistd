@@ -3,13 +3,19 @@ FROM alpine AS builder
 RUN : && \
     # dependencies for building
     apk add --no-cache \
-        cargo \
         mariadb-dev \
         openssl \
         openssl-dev \
         postgresql-dev \
-        rust \
         sqlite-dev && \
+    : && \
+        echo -ne 'http://dl-cdn.alpinelinux.org/alpine/edge/main\n\
+http://dl-cdn.alpinelinux.org/alpine/edge/community\n' \
+        >> "/etc/apk/repositories.edge" && \
+    apk add --no-cache \
+        --repositories-file "/etc/apk/repositories.edge" \
+        cargo \
+        rust && \
     : && \
     # central dependency storage for reuse
     mkdir -p "/root/.cargo" && \
